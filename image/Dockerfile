@@ -1,11 +1,35 @@
 ARG BASE_CONTAINER=jupyter/datascience-notebook
 FROM $BASE_CONTAINER
 
-RUN mamba install --quiet --yes \
+USER root
+
+ARG openjdk_version="11"
+
+RUN apt-get update --yes && \
+    apt-get install --yes --no-install-recommends \
+    "openjdk-${openjdk_version}-jre-headless" \
+    ca-certificates-java && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+USER ${NB_UID}
+
+# Install pyarrow
+RUN arch=$(uname -m) && \
+    if [ "${arch}" == "aarch64" ]; then \
+        # Prevent libmamba from sporadically hanging on arm64 under QEMU
+        # <https://github.com/mamba-org/mamba/issues/1611>
+        export G_SLICE=always-malloc; \
+    fi && \
+    mamba install --quiet --yes \
     'shapely' \
     'geopandas' \
-    'pyspark' && \
-    mamba clean --all -f -y
+    'pyspark' \
+    'pyarrow' && \
+    mamba clean --all -f -y && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+WORKDIR "${HOME}"
 
 # USER root
 
