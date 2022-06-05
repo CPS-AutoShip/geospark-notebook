@@ -1,4 +1,11 @@
-FROM jupyter/datascience-notebook
+ARG BASE_CONTAINER=jupyter/datascience-notebook
+FROM $BASE_CONTAINER
+
+RUN pip install shapely && \
+    pip install geopandas && \
+    pip install pyspark \
+
+# USER root
 
 # Add RUN statements to install packages as the $NB_USER defined in the base images.
 
@@ -7,3 +14,4 @@ FROM jupyter/datascience-notebook
 
 # If you do switch to root, always be sure to add a "USER $NB_USER" command at the end of the
 # file to ensure the image runs as a unprivileged user by default.
+# USER $NB_USER
