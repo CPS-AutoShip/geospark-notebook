@@ -1,9 +1,11 @@
 ARG BASE_CONTAINER=jupyter/datascience-notebook
 FROM $BASE_CONTAINER
 
-RUN pip install shapely && \
-    pip install geopandas && \
-    pip install pyspark \
+RUN mamba install --quiet --yes \
+    'shapely' \
+    'geopandas' \
+    'pyspark' && \
+    mamba clean --all -f -y
 
 # USER root
 
