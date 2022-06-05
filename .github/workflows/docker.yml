@@ -62,7 +62,7 @@ jobs:
           context: image/
           file: image/Dockerfile
           tags: |
-            cps-autoship/geospark-notebook:latest
+            eiriksfa/geospark-notebook:latest
           push: false
 
       - name: Run tests
@@ -82,4 +82,4 @@ jobs:
           context: image/
           file: image/Dockerfile
           tags: |
-            cps-autoship/geospark-notebook:${{steps.getrefs.outputs.sha12}}, cps-autoship/geospark-notebook:latest
+            eiriksfa/geospark-notebook:${{steps.getrefs.outputs.sha12}}, eiriksfa/geospark-notebook:latest
